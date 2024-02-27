@@ -16,7 +16,6 @@ public class FileSchainer {
 		if(nbElement==0) {
 			dernier = new Node(data,null);
 			premier = dernier;
-			System.out.print("dfdvsvf");
 		}
 		else {
 			dernier.next= new Node(data,null );
