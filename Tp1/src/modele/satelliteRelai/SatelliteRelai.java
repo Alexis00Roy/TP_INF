@@ -61,7 +61,7 @@ public class SatelliteRelai extends Thread{
 	}
 	
 	/*
-	 * Méthode permettant d'envoyer un message vers le rover
+	 * Méthode permettant d'envoyer un message vers le rove
 	 * @param msg, message à envoyer
 	 */
 	public void envoyerMessageVersRover(Message msg) {
