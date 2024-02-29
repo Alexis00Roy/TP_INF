@@ -43,11 +43,17 @@ public abstract class TransporteurMessage extends Thread {
 	// lock qui protège la liste de messages reçu
 	private ReentrantLock lock = new ReentrantLock();
 	
+	protected ArrayList<Message> list;
+	protected ArrayList<Message> Envoye;
+	
 	/**
 	 * Constructeur, initialise le compteur de messages unique
 	 */
 	public TransporteurMessage() {
-		compteurMsg = new CompteurMessage();		
+		compteurMsg = new CompteurMessage();	
+		list= new ArrayList<>();
+		Envoye= new ArrayList<>();
+		
 	}
 	
 	/**
@@ -60,10 +66,15 @@ public abstract class TransporteurMessage extends Thread {
 		lock.lock();
 		
 		try {
-			
-			/*
-			 * (6.3.3) Insérer votre code ici 
-			 */
+			if(msg instanceof Nack) {
+				list.add(0, msg);
+			}else {
+				for(int i =list.size(); i<=0;i++) {
+					if((msg.getCompte()>list.get(i).getCompte())||(list.get(i) instanceof Nack)) {
+						list.add(i,msg);
+					}
+				}
+			}
 			
 		}finally {
 			lock.unlock();
@@ -77,16 +88,42 @@ public abstract class TransporteurMessage extends Thread {
 	public void run() {
 		
 		int compteCourant = 0;
+		int compte=0;
+		boolean nackSent=false;
 		
 		while(true) {
 			
 			lock.lock();
 			
 			try {
-
-				/*
-				 * (6.3.4) Insérer votre code ici 
-				 */
+				while((!list.isEmpty())&&(!(nackSent))) {
+					if(list.get(0) instanceof Nack) {
+						compte=list.get(0).getCompte();
+						for(int i =0;i<Envoye.size();i++) {
+							if(compte == Envoye.get(0).getCompte()) {
+								envoyerMessage(Envoye.get(0));
+								list.remove(0);
+							}
+							else {
+								Envoye.remove(0);
+							}
+						}
+					}
+					else if(list.get(0).getCompte()>compteCourant) {
+						envoyerMessage( new Nack(list.get(0).getCompte()));
+						nackSent=true;
+					}
+					else if(list.get(0).getCompte()<compteCourant) {
+						list.remove(0);
+					}
+					else {
+						gestionnaireMessage(list.get(0));
+						list.remove(0);
+						compteCourant++;
+					}
+				}
+			/////////////////////////
+			envoyerMessage(new NoOp(compteurMsg.getCompteActuel()));
 			
 			}finally{
 				lock.unlock();

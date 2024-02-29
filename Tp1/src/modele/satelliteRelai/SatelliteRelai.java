@@ -23,6 +23,8 @@ package modele.satelliteRelai;
  */
 
 import java.util.ArrayList;
+import modele.centreControle.CentreControle;
+import modele.rover.Rover;
 import java.util.Random;
 import java.util.concurrent.locks.ReentrantLock;
 import utilitaire.FileSchainer;
@@ -37,8 +39,11 @@ public class SatelliteRelai extends Thread{
 	ReentrantLock lock = new ReentrantLock();
 	
 	private Random rand = new Random();
+	private CentreControle CentreOp; 
+	private Rover rover;
 	private FileSchainer messageRover = new FileSchainer();
 	private FileSchainer messageControl = new FileSchainer();
+	
 	
 	
 	/**
@@ -95,6 +100,14 @@ public class SatelliteRelai extends Thread{
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public void lierCentrOp(CentreControle centre) {
+		CentreOp=centre;
+	}
+	
+	public void lierRover(Rover r) {
+		rover= r;
 	}
 	
 	
