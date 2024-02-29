@@ -3,7 +3,7 @@ import java.lang.Math;
 public class Vect2D {
 	private double Lx;
 	private double Ly;
-	
+	//cvhjk
 	public Vect2D() {
 		Lx=1;
 		Ly=1;
