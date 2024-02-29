@@ -28,6 +28,7 @@ public class FileSchainer {
 		Object result=premier.data;
 		premier.data= null;
 		premier=premier.next;
+		nbElement--;
 		return result;
 		
 	}
@@ -38,7 +39,7 @@ public class FileSchainer {
 			estVide=true;
 		}
 		else
-			estVide=true;
+			estVide=false;
 		return estVide;
 	}
 	

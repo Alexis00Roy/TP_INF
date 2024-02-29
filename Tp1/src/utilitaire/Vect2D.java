@@ -14,11 +14,11 @@ public class Vect2D {
 	}
 	
 	public double getLy() {
-		return Lx;
+		return Ly;
 	}
 	
 	public double getLx() {
-		return Ly;
+		return Lx;
 	}
 	
 	public double Longueur() {
@@ -26,7 +26,7 @@ public class Vect2D {
 	}
 	
 	public double getAngle() {
-		return Math.atan2(Ly, Lx);
+		return ((Math.atan2(Ly, Lx)*(360))/(2*Math.PI));
 	}
 	
 	 public Vect2D calculerDiff(Vect2D posFin) {
@@ -40,7 +40,7 @@ public class Vect2D {
 	 }
 	 
 	 public void ajouter(double x,double y) {
-		 Lx=Lx +x;
+		 Lx= Lx+x;
 		 Ly= Ly+y;
 	 }
 	 
