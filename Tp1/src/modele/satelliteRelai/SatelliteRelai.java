@@ -30,11 +30,12 @@ import java.util.concurrent.locks.ReentrantLock;
 import utilitaire.FileSchainer;
 
 import modele.communication.Message;
+import modele.communication.NoOp;
 
 public class SatelliteRelai extends Thread{
 	
 	static final int TEMPS_CYCLE_MS = 500;
-	static final double PROBABILITE_PERTE_MESSAGE = 0.15;
+	static final double PROBABILITE_PERTE_MESSAGE = 0.25;
 	
 	ReentrantLock lock = new ReentrantLock();
 	
@@ -88,10 +89,12 @@ public class SatelliteRelai extends Thread{
 	public void run() {
 		
 		while(true) {
-			
-			/*
-			 * (5.3) Insérer votre code ici 
-			 */
+			while(!(messageRover.estVide())) {
+				 rover.receptionMessageDeSatellite((Message)messageRover.pop());
+			}
+			while(!(messageControl.estVide())) {
+				 CentreOp.receptionMessageDeSatellite((Message)messageControl.pop());
+			}
 
 			// attend le prochain cycle
 			try {

@@ -64,16 +64,22 @@ public abstract class TransporteurMessage extends Thread {
 	 */
 	public void receptionMessageDeSatellite(Message msg) {
 		lock.lock();
-		
 		try {
 			if(msg instanceof Nack) {
 				list.add(0, msg);
-			}else {
-				for(int i =list.size(); i<=0;i++) {
+			}else if(list.size()!=0){
+				for(int i =list.size()-1; i>=0;i--) {
 					if((msg.getCompte()>list.get(i).getCompte())||(list.get(i) instanceof Nack)) {
-						list.add(i,msg);
+						list.add(i+1,msg);
+						i=-1;
+					}
+					if(i==0) {
+						list.add(0,msg);
 					}
 				}
+			}
+			else {
+				list.add(msg);
 			}
 			
 		}finally {
@@ -88,29 +94,32 @@ public abstract class TransporteurMessage extends Thread {
 	public void run() {
 		
 		int compteCourant = 0;
-		int compte=0;
-		boolean nackSent=false;
+		boolean nackSent;
+		boolean found;
 		
 		while(true) {
 			
 			lock.lock();
 			
 			try {
-				while((!list.isEmpty())&&(!(nackSent))) {
+				nackSent=false;
+				found=false;
+				while(!(list.isEmpty())&&(!(nackSent))) {
 					if(list.get(0) instanceof Nack) {
-						compte=list.get(0).getCompte();
-						for(int i =0;i<Envoye.size();i++) {
-							if(compte == Envoye.get(0).getCompte()) {
-								envoyerMessage(Envoye.get(0));
-								list.remove(0);
+						while((Envoye.size()>0) && (!(found))) {
+							if(list.get(0).getCompte() > Envoye.get(0).getCompte()||((Envoye.get(0) instanceof Nack))) {
+								Envoye.remove(0);
+								
 							}
 							else {
-								Envoye.remove(0);
+								envoyerMessage(Envoye.get(0));
+								list.remove(0);
+								found=true;
 							}
 						}
 					}
 					else if(list.get(0).getCompte()>compteCourant) {
-						envoyerMessage( new Nack(list.get(0).getCompte()));
+						envoyerMessage( new Nack(compteCourant));
 						nackSent=true;
 					}
 					else if(list.get(0).getCompte()<compteCourant) {
@@ -123,6 +132,7 @@ public abstract class TransporteurMessage extends Thread {
 					}
 				}
 			/////////////////////////
+				
 			envoyerMessage(new NoOp(compteurMsg.getCompteActuel()));
 			
 			}finally{
