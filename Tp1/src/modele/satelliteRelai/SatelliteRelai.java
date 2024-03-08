@@ -35,7 +35,7 @@ import modele.communication.NoOp;
 public class SatelliteRelai extends Thread{
 	
 	static final int TEMPS_CYCLE_MS = 500;
-	static final double PROBABILITE_PERTE_MESSAGE = 0.25;
+	static final double PROBABILITE_PERTE_MESSAGE = 0.00;
 	
 	ReentrantLock lock = new ReentrantLock();
 	
@@ -89,10 +89,10 @@ public class SatelliteRelai extends Thread{
 	public void run() {
 		
 		while(true) {
-			while(!(messageRover.estVide())) {
+			if(!(messageRover.estVide())) {
 				 rover.receptionMessageDeSatellite((Message)messageRover.pop());
 			}
-			while(!(messageControl.estVide())) {
+			if(!(messageControl.estVide())) {
 				 CentreOp.receptionMessageDeSatellite((Message)messageControl.pop());
 			}
 

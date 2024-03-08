@@ -2,6 +2,7 @@ package programme;
 
 
 
+
 import utilitaire.FileSchainer;
 import utilitaire.Vect2D;
 
@@ -19,8 +20,9 @@ public class ProgrammePrincipale {
 	 */
 	public static void main(String[] args){
 	
+	
 		SatelliteRelai satellite = new SatelliteRelai();
-		Rover rover=new Rover(satellite);
+		Rover rover=new Rover(satellite, new Vect2D(50,50));
 		CentreControle controle = new CentreControle(satellite);
 		satellite.lierCentrOp(controle);
 		satellite.lierRover(rover);
@@ -30,6 +32,7 @@ public class ProgrammePrincipale {
 		controle.start();
 		
 		controle.testCom();
+		//rover.testStat();
 		
 		
 	}

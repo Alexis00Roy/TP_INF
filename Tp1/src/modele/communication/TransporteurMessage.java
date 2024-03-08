@@ -132,9 +132,9 @@ public abstract class TransporteurMessage extends Thread {
 					}
 				}
 			/////////////////////////
-				
+			if(nackSent==false) {
 			envoyerMessage(new NoOp(compteurMsg.getCompteActuel()));
-			
+			}			
 			}finally{
 				lock.unlock();
 			}
